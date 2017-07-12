@@ -1,5 +1,5 @@
 pkgname=liteide
-pkgver=32
+pkgver=32.1
 pkgrel=1
 pkgdesc='Simple, open source, cross-platform Go IDE in Qt5'
 license=('LGPL')
@@ -9,37 +9,37 @@ depends=('go' 'qtwebkit-tp')
 makedepends=('qt5-base' 'go' 'gendesk' 'git' 'mercurial' )
 options=('!strip' '!emptydirs')
 source=("https://github.com/visualfc/${pkgname}/archive/x${pkgver}.tar.gz")
-md5sums=('2afe4a4b02871e61e1cd1dd898d68a2a')
+md5sums=('4e24e569a91d5178f386b72efc9d3964')
 
 prepare() {
-	cd "${srcdir}/${pkgname}-x${pkgver}"
-	chmod +x build/*.sh
-	sed -i 's/qmake/qmake-qt5/g' build/build_linux.sh
-	sed -i 's/^GOROOT/#GOROOT/g' liteidex/os_deploy/linux/liteenv/linux64.env
+    cd ${srcdir}/${pkgname}-x${pkgver}
+    chmod +x build/*.sh
+    sed -i 's/qmake/qmake-qt5/g' build/build_linux.sh
+    sed -i 's/^GOROOT/#GOROOT/g' liteidex/os_deploy/linux/liteenv/linux64.env
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-x${pkgver}/build"
-  export QTDIR=/usr
-  export GOPATH=$(pwd)/go
-  mkdir -p go
-  ./update_pkg.sh
-  ./build_linux.sh
-  gendesk -f -n --name 'LiteIDE' --pkgname "${pkgname}" --pkgdesc "${pkgdesc}"
+    cd ${srcdir}/${pkgname}-x${pkgver}/build
+    export QTDIR=/usr
+    export GOPATH=$(pwd)/go
+    mkdir -p go
+    ./update_pkg.sh
+    ./build_linux.sh
+    gendesk -f -n --name 'LiteIDE' --pkgname "${pkgname}" --pkgdesc "${pkgdesc}"
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-x${pkgver}"
+    cd ${srcdir}/${pkgname}-x${pkgver}
 
-	mkdir -p "${pkgdir}/usr/share/${pkgname}" "${pkgdir}/usr/lib/${pkgname}"
+    mkdir -p ${pkgdir}/usr/share/${pkgname} ${pkgdir}/usr/lib/${pkgname}
 
-	cp -r "build/${pkgname}/bin" "${pkgdir}/usr"
-	cp -r liteidex/deploy/* liteidex/os_deploy/* "${pkgdir}/usr/share/${pkgname}"
-	cp -r liteidex/liteide/lib/liteide/* "${pkgdir}/usr/lib/${pkgname}"
+    cp -r build/${pkgname}/bin ${pkgdir}/usr
+    cp -r liteidex/deploy/* liteidex/os_deploy/* ${pkgdir}/usr/share/${pkgname}
+    cp -r liteidex/liteide/lib/liteide/* ${pkgdir}/usr/lib/${pkgname}
 
 
-	install -Dm644 "build/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-	install -Dm644 "liteidex/src/liteapp/images/${pkgname}128.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+    install -Dm644 build/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
+    install -Dm644 liteidex/src/liteapp/images/${pkgname}128.png ${pkgdir}/usr/share/icons/hicolor/128x128/apps/${pkgname}.png
 
-	mv "${pkgdir}/usr/share/liteide/linux/liteenv" "$pkgdir/usr/share/liteide/liteenv"
+    mv ${pkgdir}/usr/share/liteide/linux/liteenv $pkgdir/usr/share/liteide/liteenv
 }

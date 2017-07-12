@@ -1,6 +1,5 @@
-liteide
-=======
+# liteide
 
 Simple, open source, cross-platform Go IDE in Qt5
 
-URL: https://github.com/visualfc/liteide
+[Homepage](https://github.com/visualfc/liteide)
