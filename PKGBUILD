@@ -1,15 +1,15 @@
 pkgname=liteide
-pkgver=37.3
+pkgver=37.4
 pkgrel=1
 pkgdesc='Simple, open source, cross-platform Go IDE in Qt5'
 license=('LGPL')
 arch=('x86_64')
 url='https://github.com/visualfc/liteide'
 depends=('go' 'qtwebkit-tp')
-makedepends=('qt5-base' 'go' 'gendesk' 'git' 'mercurial' )
+makedepends=('qt5-base' 'go' 'git' 'mercurial' )
 options=('!strip' '!emptydirs')
 source=("https://github.com/visualfc/${pkgname}/archive/x${pkgver}.tar.gz")
-md5sums=('65812f2ce6462ca5b683bf2f7387886d')
+sha256sums=('8b6842ead4915aaf4ee691962259ae290a37c00e3669c50b61e4386bf133e5ce')
 
 prepare() {
     cd ${srcdir}/${pkgname}-x${pkgver}
@@ -18,17 +18,19 @@ prepare() {
     sed -i 's/^GOROOT/#GOROOT/g' liteidex/os_deploy/linux/liteenv/linux64.env
     # Fix the libpng warning: iCCP: known incorrect sRGB profile
     find . -type f -iname "*.png" -exec mogrify -strip '{}' \;
+    #relro
+    sed -i 's/"CONFIG+=release"/"CONFIG+=release" "QMAKE_LFLAGS+=-Wl,-z,relro,-z,now" "QMAKE_CXXFLAGS+=-Wl,-z,relro,-z,now"/g' \
+      build/build_linux.sh
 }
 
 build() {
     cd ${srcdir}/${pkgname}-x${pkgver}/build
-    export GOROOT=/usr/lib/go
+    export GO111MODULE=off
     export QTDIR=/usr
     export GOPATH=$(pwd)/go
     mkdir -p go
     ./update_pkg.sh
     ./build_linux.sh
-    gendesk -f -n --name 'LiteIDE' --pkgname "${pkgname}" --pkgdesc "${pkgdesc}"
 }
 
 package() {
