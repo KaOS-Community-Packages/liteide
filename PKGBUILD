@@ -1,5 +1,5 @@
 pkgname=liteide
-pkgver=38.1
+pkgver=38.2
 pkgrel=1
 pkgdesc='Simple, open source, cross-platform Go IDE in Qt5'
 license=('LGPL')
@@ -9,7 +9,7 @@ url='https://github.com/visualfc/liteide'
 makedepends=('qt5-base' 'go' 'git' 'mercurial' )
 options=('!strip' '!emptydirs')
 source=("https://github.com/visualfc/${pkgname}/archive/x${pkgver}.tar.gz")
-sha256sums=('7187aaaef73e2f8252a95a1a6cd96407ed3fedfc146cbf249a697d208996c91a')
+sha256sums=('94387ca69c3fd07d7f0d849f3275e047f9efff7aa30ac7476caddc3e5cc76a0d')
 
 prepare() {
     cd ${srcdir}/${pkgname}-x${pkgver}
